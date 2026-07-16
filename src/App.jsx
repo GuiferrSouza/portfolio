@@ -1,5 +1,7 @@
 
+import { useEffect } from 'react'
 import './App.css';
+
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Loading from './components/Loading';
@@ -8,10 +10,21 @@ import AboutMeSection from './components/AboutMeSection';
 import UpdatesSection from './components/UpdatesSection';
 import ProjectsSection from './components/ProjectsSection';
 import ContactsSection from './components/ContactsSection';
+
 import { usePortfolioData } from './hooks/usePortfolioData';
+import { registerAccess } from './services/supabase';
 
 export default function App() {
-  const { about, updates, contacts, projects, loading, error } = usePortfolioData();
+  const {
+    about,
+    updates,
+    contacts,
+    projects,
+    loading,
+    error
+  } = usePortfolioData();
+
+  useEffect(() => registerAccess(), []);
 
   if (loading) return <Loading />;
 
