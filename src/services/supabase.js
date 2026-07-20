@@ -20,7 +20,7 @@ export const getAll = async (table) => {
   const { data, error } = await supabase
     .from(table)
     .select('*')
-    .order('id', { ascending: true });
+    .order('created_at', { ascending: false });
 
   if (error) throw error;
   return data;
