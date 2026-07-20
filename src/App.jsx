@@ -12,7 +12,9 @@ import ProjectsSection from './components/ProjectsSection';
 import ContactsSection from './components/ContactsSection';
 
 import { usePortfolioData } from './hooks/usePortfolioData';
+import { getAccessLocation } from './services/access';
 import { registerAccess } from './services/supabase';
+import { notifyAccess } from './services/telegram';
 
 export default function App() {
   const {
@@ -24,7 +26,14 @@ export default function App() {
     error
   } = usePortfolioData();
 
-  useEffect(() => registerAccess(), []);
+  useEffect(() => {
+    const handleAccess = async () => {
+      const location = await getAccessLocation();
+      await registerAccess(location);
+      await notifyAccess(location);
+    };
+    handleAccess();
+  }, []);
 
   if (loading) return <Loading />;
 

@@ -33,36 +33,11 @@ export const getContacts = () => getAll('contacts');
 
 //------------------------------------------------------------------------------------------
 
-export const registerAccess = () => {
-  const insertAccess = async (location = null) => {
-    const { error } = await supabase
-      .from('accesses')
-      .insert({
-        latitude_coarse: location ? Number(location.latitude.toFixed(1)) : null,
-        longitude_coarse: location ? Number(location.longitude.toFixed(1)) : null,
-        accuracy_m: location ? Math.round(location.accuracy) : null,
-      });
-
-    if (error) console.error('Access info creation error:', error);
-  };
-
-  if (!navigator.geolocation) {
-    insertAccess();
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    ({ coords }) => insertAccess({
-      latitude: coords.latitude,
-      longitude: coords.longitude,
-      accuracy: coords.accuracy,
-    }),
-    // User declined or location doesn't work.
-    () => insertAccess(),
-    {
-      enableHighAccuracy: false,
-      timeout: 10000,
-      maximumAge: 300000,
-    },
-  );
+export const registerAccess = async (location) => {
+  const { error } = await supabase.from('accesses').insert({
+    latitude_coarse: location ? Number(location.latitude.toFixed(1)) : null,
+    longitude_coarse: location ? Number(location.longitude.toFixed(1)) : null,
+    accuracy_m: location ? Math.round(location.accuracy) : null,
+  });
+  if (error) throw error;
 };
